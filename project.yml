@@ -1,0 +1,34 @@
+name: Lufsa
+options:
+  bundleIdPrefix: com.nsf-name
+  deploymentTarget:
+    macOS: "26.0"
+  xcodeVersion: "26.5"
+  generateEmptyDirectories: true
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    ENABLE_HARDENED_RUNTIME: YES
+    MACOSX_DEPLOYMENT_TARGET: "26.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+
+targets:
+  Lufsa:
+    type: application
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: Sources/Lufsa
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nsf-name.Lufsa
+        PRODUCT_NAME: Lufsa
+        INFOPLIST_FILE: Sources/Lufsa/Info.plist
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    scheme:
+      testTargets: []
+      gatherCoverageData: false
+
