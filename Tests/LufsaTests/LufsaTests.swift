@@ -6,3 +6,9 @@ import Testing
     // Swift Testing Documentation
     // https://developer.apple.com/documentation/testing
 }
+
+// TODO: write better tests here.
+@Test func sampleTest() {
+    let result = 42 * 2
+    #expect(result == 84)
+}
