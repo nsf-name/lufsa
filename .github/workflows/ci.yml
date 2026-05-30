@@ -1,0 +1,24 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build-and-test:
+    # keep this up to date!
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install xcodegen
+        run: brew install xcodegen
+
+      - name: generate project
+        run: cd Lufsa && xcodegen generate
+
+      - name: build & test
+        run: |
+          xcodebuild \
+            -project Lufsa.xcodeproj \
+            -scheme Lufsa \
+            -destination 'platform=macOS' \
+            test
