@@ -34,6 +34,7 @@ struct ImageStickyView: View {
                 .aspectRatio(contentMode: .fit)
                 .navigationTitle(document.url.lastPathComponent)
                 .overlay(WindowAccessor(window: $window))
+                .overlay(DraggableBackground())
                 .onChange(of: appearsActive) { _, isActive in
                     if isActive {
                         WindowManager.shared.focusedDocument = document
@@ -79,6 +80,30 @@ struct WindowAccessor: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
+struct DraggableBackground: NSViewRepresentable {
+    func makeNSView(context: Context) -> DraggableView { DraggableView() }
+    func updateNSView(_ nsView: DraggableView, context: Context) {}
+}
+
+class DraggableView: NSView {
+    private var initialLocation: NSPoint?
+
+    override func mouseDown(with event: NSEvent) {
+        initialLocation = NSEvent.mouseLocation
+    }
+
+    override func mouseDragged(with event: NSEvent) {
+        guard let window = window else { return }
+        window.setFrameOrigin(NSPoint(
+            x: window.frame.origin.x + event.deltaX,
+            y: window.frame.origin.y - event.deltaY  // y is flipped
+        ))
+    }
+
+    override var isOpaque: Bool { false }
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
 }
 
 @MainActor
