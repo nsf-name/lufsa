@@ -116,7 +116,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.allowsMultipleSelection = true
-        // with this one change, we build on Yosemite
+        // with this one change, we build on High Sierra
         if #available(macOS 11.0, *) {
             panel.allowedContentTypes = [.image]
         } else {
