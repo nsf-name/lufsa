@@ -9,6 +9,7 @@ By default, `lufsa` includes all the images bundled with the classic `xteddy` te
 - Semi-transparent windows
 - Pixel-perfect mode
 - Floating window mode
+
 It is compatible with any image type that Preview can read. To my knowledge, `lufsa` is the only macOS image viewer that has all the same window functionality of Sticky Notes. So if you use Sticky Notes as much as I do, then maybe you'll find this useful as well! 
 
 ## Building
