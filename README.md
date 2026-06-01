@@ -11,9 +11,11 @@ On a macOS 15.0 or newer system, run the following:
 $ git clone https://github.com/nsf-name/lufsa lufsa && cd lufsa
 $ xcodegen generate
 $ make build
-``
+```
 After a build, run `make clean`.
 
 ## License
 
-This app is licensed under GPL v2.0 just like the original, which was written by [Professor Stefan Gustavson at Linköping University](https://www.itn.liu.se/~stegu76/) between 1994-1997. I named this rewrite `lufsa` because that's the name of the [original teddy bear used in `xteddy`](https://linuxgazette.net/122/TWDT.html#nottag.2). Richard Neill added the additional images to the Debian port of `xteddy`, which are also bundled with this program. 
+This app is licensed under GPL v2.0 just like the original, which was written by [Professor Stefan Gustavson at Linköping University](https://www.itn.liu.se/~stegu76/) between 1994-1997. I named this rewrite `lufsa` because that's the name of the [original teddy bear used in `xteddy`](https://linuxgazette.net/122/TWDT.html#nottag.2). Richard Neill added the additional images to the Debian port of `xteddy`, which are also bundled with this program.
+
+The app icon is licensed CC-BY-4.0 and the bear image is taken from the [Twitter Color Emoji](https://github.com/13rac1/twemoji-color-font) font.
