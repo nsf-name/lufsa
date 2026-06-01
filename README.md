@@ -1,3 +1,5 @@
+<img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="250" align="right"/>
+
 # Lufsa
 *xteddy port to modern macOS*
 
