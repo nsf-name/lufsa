@@ -9,6 +9,8 @@
   <key>CFBundleShortVersionString</key><string>1.0</string>
   <key>CFBundleExecutable</key>   <string>$(EXECUTABLE_NAME)</string>
   <key>CFBundlePackageType</key>  <string>APPL</string>
+  <key>CFBundleIconName</key>     <string>Lufsa</string>
+  <key>LSApplicationCategory</key><string>Utilities</string>
   <key>NSPrincipalClass</key>     <string>NSApplication</string>
   <key>NSHighResolutionCapable</key><true/>
 </dict>

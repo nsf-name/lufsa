@@ -19,6 +19,9 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "26.0"
+    configs:
+      Debug: debug
+      Release: release
     sources:
       - path: Sources/Lufsa
     settings:
@@ -27,21 +30,23 @@ targets:
         PRODUCT_NAME: Lufsa
         INFOPLIST_FILE: Sources/Lufsa/Info.plist
         CODE_SIGN_STYLE: Automatic
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
-    scheme:
-      testTargets: [ LufsaTests ]
-      gatherCoverageData: false
+        ASSETCATALOG_COMPILER_APPICON_NAME: Lufsa
+    schemes:
+      Lufsa-Debug:
+        build:
+          targets:
+            Lufsa: all
+        run:
+          config: Debug
 
-  LufsaTests:
-    type: bundle.unit-test
-    platform: macOS
-    deploymentTarget: "26.0"
-    sources:
-      - path: Tests/LufsaTests
-    dependencies:
-      - target: Lufsa
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.nsf-name.LufsaTests
+      Lufsa-Release:
+        build:
+          targets:
+            Lufsa: all
+        archive:
+          config: Release
+        run:
+          config: Release
+
+    
 
