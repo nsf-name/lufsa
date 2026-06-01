@@ -1,6 +1,7 @@
 <img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="250" align="right"/>
 
 ## Lufsa
+
 *xteddy port to modern macOS*
 
 `lufsa` is a port of the X11 app `xteddy` to modern macOS. The original page for `xteddy` is viewable [by clicking here](https://itn-web.it.liu.se/~stegu76/xteddy/index.html). I recreated this because it doesn't compile on macOS anymore (no X11 libraries and no X11-Quartz bridge these days), I wanted to learn how `xcodegen` and AppKit work with a simple project, and reimplementing `xteddy` is a good way to practice using AppKit/SwiftUI's stranger features.
