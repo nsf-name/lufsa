@@ -1,80 +1,30 @@
 // WindowManager.swift
 import SwiftUI
 
-struct ImageDocument: Identifiable, Hashable, Codable {
-    let id: UUID
-    let url: URL
-    var properties: ImageWindowProperties
-}
-
-struct ImageWindowProperties: Hashable, Codable {
-    let width: CGFloat
-    let height: CGFloat
-    
-    var isFloating: Bool
-    var isHalfOpacity: Bool
-    var isBorderless: Bool
-}
-
-struct ImageStickyView: View {
-    @Environment(\.appearsActive) private var appearsActive
-    @State private var window: NSWindow?
-    
-    @State var isActive = false
-    let documentId: UUID
-    var document: ImageDocument? {
-        WindowManager.shared.documents.first { $0.id == documentId }
-    }
-    
-    var body: some View {
-        if let document {
-            Image(nsImage: NSImage(byReferencing: document.url))
-                .resizable()
-                .scaledToFit()
-                .aspectRatio(contentMode: .fit)
-                .navigationTitle(document.url.lastPathComponent)
-                .overlay(WindowAccessor(window: $window))
-                .overlay(DraggableBackground())
-                .onChange(of: appearsActive) { _, isActive in
-                    if isActive {
-                        WindowManager.shared.focusedDocument = document
-                        print("DEBUG: focused document is now \(WindowManager.shared.focusedDocument?.url.lastPathComponent ?? "nil")")
-                    }
-                }
-                .onChange(of: document.properties.isHalfOpacity) { _, val in
-                    window?.alphaValue = val ? 0.5 : 1.0
-                }
-                .onChange(of: document.properties.isFloating) { _, val in
-                    window?.level = val ? .popUpMenu : .normal
-                }
-                .onChange(of: document.properties.isBorderless) { _, isBorderless in
-                    if isBorderless {
-                        window?.styleMask = [.borderless, .fullSizeContentView]
-                        window?.titlebarAppearsTransparent = true
-                        window?.titleVisibility = .hidden
-                        window?.backgroundColor = .clear
-                        window?.isOpaque = false
-                    } else {
-                        window?.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-                        window?.titlebarAppearsTransparent = false
-                        window?.titleVisibility = .visible
-                        window?.backgroundColor = .windowBackgroundColor
-                        window?.isOpaque = true
-                    }
-                }
-        }
-    }
-}
-
 // SwiftUI gives us no way to fetch a NSWindow,
 // so we need to use this in order to get one.
 struct WindowAccessor: NSViewRepresentable {
     @Binding var window: NSWindow?
+    var document: ImageDocument?
 
     func makeNSView(context: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
-            self.window = view.window
+            guard let window = view.window else { return }
+            guard let image = document?.properties else { return }
+            self.window = window
+
+            // snap to ratio immediately, use correct aspect
+            if image.isBorderless {
+                window.aspectRatio = image.aspectRatio
+            } else {
+                window.aspectRatio = NSSize(width: image.aspectRatio.width,
+                                            height: image.aspectRatio.height + window.titlebarHeight)
+            }
+            let aspect = image.aspectRatio.width / image.aspectRatio.height
+            let w = window.frame.width
+            let h = w / aspect + window.titlebarHeight
+            window.setFrame(CGRect(origin: window.frame.origin, size: NSSize(width: w, height: h)), display: true)
         }
         return view
     }
@@ -82,7 +32,15 @@ struct WindowAccessor: NSViewRepresentable {
     func updateNSView(_ nsView: NSView, context: Context) {}
 }
 
-struct DraggableBackground: NSViewRepresentable {
+// it's cleaner to write this as an extension
+extension NSWindow {
+    var titlebarHeight: CGFloat {
+        frame.height - contentRect(forFrameRect: frame).height
+    }
+}
+
+// wrapper NSView that makes any location on the window draggable.
+struct DraggableEverywhere: NSViewRepresentable {
     func makeNSView(context: Context) -> DraggableView { DraggableView() }
     func updateNSView(_ nsView: DraggableView, context: Context) {}
 }
@@ -96,6 +54,7 @@ class DraggableView: NSView {
 
     override func mouseDragged(with event: NSEvent) {
         guard let window = window else { return }
+        // we use NSPoint so it works at any DPI (Retina displays)
         window.setFrameOrigin(NSPoint(
             x: window.frame.origin.x + event.deltaX,
             y: window.frame.origin.y - event.deltaY  // y is flipped
@@ -121,9 +80,8 @@ class WindowManager {
         panel.allowsMultipleSelection = true
         guard panel.runModal() == .OK else { return }
         panel.urls.forEach { url in
-            let width = NSImage(byReferencing: url).size.width
-            let height = NSImage(byReferencing: url).size.height
-            let properties = ImageWindowProperties(width: width, height: height, isFloating: true, isHalfOpacity: false, isBorderless: false)
+            let size = NSImage(byReferencing: url).size
+            let properties = ImageWindowProperties(size: size, aspectRatio: NSSize(width: size.width, height: size.height), isFloating: true, isHalfOpacity: false, isBorderless: false)
             let document = ImageDocument(id: UUID(), url: url, properties: properties)
             documents.append(document)
             focusedDocument = document
