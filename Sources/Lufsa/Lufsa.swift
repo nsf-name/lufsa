@@ -12,6 +12,7 @@ struct LufsaApp: App {
                 ImageStickyView(documentId: id)
             }
         }
+        .defaultSize(width: 300, height: 300)
         .windowLevel(.floating)
         .windowBackgroundDragBehavior(.enabled)
         .commandsRemoved() // kind of a hack
