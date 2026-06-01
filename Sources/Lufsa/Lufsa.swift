@@ -116,7 +116,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.allowsMultipleSelection = true
-        panel.allowedContentTypes = [.image]
+        // with this one change, we build on Yosemite
+        if #available(macOS 11.0, *) {
+            panel.allowedContentTypes = [.image]
+        } else {
+            panel.allowedFileTypes = ["public.image"]
+        }
         panel.begin { response in
             guard response == .OK else { return }
                 for url in panel.urls {
