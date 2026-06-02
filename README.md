@@ -1,4 +1,4 @@
-<img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="200" align="right"/>
+<img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="220" align="right"/>
 
 ### Lufsa: *xteddy port to modern macOS*
 
