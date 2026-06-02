@@ -1,4 +1,4 @@
-<img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="250" align="right"/>
+<img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="200" align="right"/>
 
 ### Lufsa: *xteddy port to modern macOS*
 
@@ -13,13 +13,13 @@ By default, `lufsa` includes all the images bundled with the classic `xteddy` te
 It is compatible with any image type that Preview can read. To my knowledge, `lufsa` is the only macOS image viewer that has all the same window functionality of Sticky Notes. So if you use Sticky Notes as much as I do, then maybe you'll find this useful as well! 
 
 ## Building
-On a macOS 15.0 or newer system, run the following:
+On a macOS 10.13 or newer system, run the following:
 ```
 $ git clone https://github.com/nsf-name/lufsa lufsa && cd lufsa
 $ xcodegen generate
-$ make build
+$ make debug # or just "make", or "make release"
 ```
-After a build, run `make clean`.
+After a build, run `make clean`. You will need to use your own Apple Developer License to produce signed builds for distribution to other systems; otherwise, you will need to whitelist this app with Gatekeeper. Builds available in this repository in Packages are signed and notarized for use without whitelisting. 
 
 ## License
 
@@ -30,7 +30,8 @@ The app icon is licensed CC-BY-4.0 and the bear image is taken from the [Twitter
 ## Ideas
 
 Things that might go into a future release, or if requested:
-- Layout restoration
+- Layout restoration on resume
+- Pure icon bar mode
 - Drag and drop functionality
 - Support for more image types
 - Pinch/zoom images in-frame
