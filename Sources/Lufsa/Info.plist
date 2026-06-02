@@ -6,7 +6,7 @@
   <key>CFBundleName</key>         <string>Lufsa</string>
   <key>CFBundleIdentifier</key>   <string>com.nsf-name.Lufsa</string>
   <key>CFBundleVersion</key>      <string>1</string>
-  <key>CFBundleShortVersionString</key><string>1.0</string>
+  <key>CFBundleShortVersionString</key><string>1.1</string>
   <key>CFBundleExecutable</key>   <string>$(EXECUTABLE_NAME)</string>
   <key>CFBundlePackageType</key>  <string>APPL</string>
   <key>CFBundleIconName</key>     <string>Lufsa</string>
