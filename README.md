@@ -1,10 +1,11 @@
 <img src="https://github.com/nsf-name/lufsa/raw/main/Lufsa-icon.png" width="220" align="right"/>
 
-### Lufsa: *xteddy port to modern macOS*
+### Lufsa: *Sticky Notes but for images*
 
-`lufsa` is a port of the X11 app `xteddy` to modern macOS. The original page for `xteddy` is viewable [by clicking here](https://itn-web.it.liu.se/~stegu76/xteddy/index.html). I recreated this because it doesn't compile on macOS anymore (no X11 libraries and no X11-Quartz bridge these days), I wanted to learn how `xcodegen` and AppKit work with a simple project, and reimplementing `xteddy` is a good way to practice using AppKit/SwiftUI's stranger features.
+`lufsa` is a port of the Unix X11 app `xteddy` to modern macOS (the original page for `xteddy` is viewable [by clicking here](https://itn-web.it.liu.se/~stegu76/xteddy/index.html)). I recreated this app because it doesn't compile on macOS anymore (no X11 libraries and no X11-Quartz bridge these days), I wanted to learn how `xcodegen` and AppKit work with a simple project, and reimplementing `xteddy`'s window features is a good way to practice using AppKit/SwiftUI's stranger features.
 
-By default, `lufsa` includes all the images bundled with the classic `xteddy` teddy bear, which can be opened via the menu bar. However, it can do a lot more, since you can use it like Sticky Notes but for any image! Simply select an image of your choice in the menu bar, and you can place it anywhere you'd like on your desktop, with the following settings:
+By default, `lufsa` includes all the images bundled with the classic `xteddy` application, which can be opened via the menu bar. However, it can do a lot more, since you can use it like Sticky Notes but for any image (just like `xteddy`)! Simply select an image of your choice in the menu bar, and you can place it anywhere you'd like on your desktop, with the following settings:
+
 - Remove or add borders
 - Semi-transparent windows
 - Pixel-perfect mode
