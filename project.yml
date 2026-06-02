@@ -26,6 +26,8 @@ targets:
       - path: Sources/Lufsa
     settings:
       base:
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PRODUCT_VERSION: "1"
         PRODUCT_BUNDLE_IDENTIFIER: com.nsf-name.Lufsa
         PRODUCT_NAME: Lufsa
         INFOPLIST_FILE: Sources/Lufsa/Info.plist

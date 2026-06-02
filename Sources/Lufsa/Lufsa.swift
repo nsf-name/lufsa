@@ -34,11 +34,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         let fileMenuItem = NSMenuItem(title: "File", action: nil, keyEquivalent: "")
         let fileMenu = NSMenu(title: "File")
-        fileMenu.addItem(NSMenuItem(title: "Open", action: #selector(openFile), keyEquivalent: "o"))
+        fileMenu.addItem(NSMenuItem(title: "Open", action: #selector(filePicker), keyEquivalent: "o"))
         fileMenuItem.submenu = fileMenu
         mainMenu.addItem(fileMenuItem)
+        
+        let bundledItem = NSMenuItem(title: "Bundled", action: nil, keyEquivalent: "")
+        let bundledMenu = NSMenu(title: "Bundled")
+        // all included images
+        let images = ["xalex", "xbobo", "xbrummi", "xcherubino", "xduck", "xhedgehog", "xklitze", "xnamu", "xorca", "xpenguin", "xpuppy", "xruessel", "xteddy", "xtrouble", "xtuxxy"]
+        for name in images {
+            let item = NSMenuItem(title: name, action: #selector(openBundledImage(_:)), keyEquivalent: "")
+            item.representedObject = name
+            bundledMenu.addItem(item)
+        }
 
-        NSApp.mainMenu = mainMenu
+        bundledItem.submenu = bundledMenu
+        fileMenu.addItem(bundledItem)
         
         let windowMenuItem = NSMenuItem(title: "Window", action: nil, keyEquivalent: "")
         let windowMenu = NSMenu(title: "Window")
@@ -47,6 +58,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.floatingItem = NSMenuItem(title: "Floating", action: #selector(toggleFloating), keyEquivalent: "f")
         self.borderlessItem = NSMenuItem(title: "Borderless", action: #selector(toggleBorderless), keyEquivalent: "b")
         self.pixelPerfectItem = NSMenuItem(title: "Pixel-Perfect", action: #selector(togglePixelPerfect), keyEquivalent: "p")
+        
+        NSApp.mainMenu = mainMenu
 
         windowMenu.addItem(opacityItem)
         windowMenu.addItem(floatingItem)
@@ -112,7 +125,46 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
     
     @MainActor
-    @objc func openFile() {
+    @objc func openBundledImage(_ sender: NSMenuItem) {
+        guard let name = sender.representedObject as? String else { return }
+        let url = Bundle.main.url(forResource: name, withExtension: "png")!
+        openFile(url)
+    }
+    
+    @MainActor
+    @objc func openFile(_ url: URL) {
+        let image = NSImage(byReferencing: url)
+        let canvas = ImageCanvas(image: image)
+        let delegate = AspectScaleDelegate(baseSize: image.size)
+        
+        let window = LufsaWindow(
+            contentRect: NSRect(x: 0, y: 0, width: Int(image.size.width) as Int, height: Int(image.size.height)),
+            styleMask: [.titled, .closable, .resizable, .miniaturizable],
+            backing: .buffered,
+            defer: false
+        )
+        
+        // this is Dark Arts to create a strong reference.
+        // *ptr to heap of main actor, which holds it.
+        // https://nshipster.com/associated-objects/
+        objc_setAssociatedObject(window, &Self.delegateKey, delegate, .OBJC_ASSOCIATION_RETAIN)
+        window.delegate = delegate
+        window.title = url.lastPathComponent
+        window.contentView = canvas
+        
+        let screen = NSScreen.main!.visibleFrame
+        let width = min(image.size.width, screen.width)
+        let height = width / (image.size.width / image.size.height)
+        window.setContentSize(NSSize(width: width, height: height))
+        window.isMovableByWindowBackground = true
+        
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        self.windows.append(window)
+    }
+    
+    @MainActor
+    @objc func filePicker() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.allowsMultipleSelection = true
@@ -125,34 +177,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         panel.begin { response in
             guard response == .OK else { return }
                 for url in panel.urls {
-                    let image = NSImage(byReferencing: url)
-                    let canvas = ImageCanvas(image: image)
-                    let delegate = AspectScaleDelegate(baseSize: image.size)
-                    
-                    let window = LufsaWindow(
-                        contentRect: NSRect(x: 0, y: 0, width: Int(image.size.width) as Int, height: Int(image.size.height)),
-                        styleMask: [.titled, .closable, .resizable, .miniaturizable],
-                        backing: .buffered,
-                        defer: false
-                    )
-                    
-                    // this is Dark Arts to create a strong reference.
-                    // *ptr to heap of main actor, which holds it.
-                    // https://nshipster.com/associated-objects/
-                    objc_setAssociatedObject(window, &Self.delegateKey, delegate, .OBJC_ASSOCIATION_RETAIN)
-                    window.delegate = delegate
-                    window.title = url.lastPathComponent
-                    window.contentView = canvas
-                    
-                    let screen = NSScreen.main!.visibleFrame
-                    let width = min(image.size.width, screen.width)
-                    let height = width / (image.size.width / image.size.height)
-                    window.setContentSize(NSSize(width: width, height: height))
-                    window.isMovableByWindowBackground = true
-                    
-                    window.center()
-                    window.makeKeyAndOrderFront(nil)
-                    self.windows.append(window)
+                    self.openFile(url)
             }
             
         }
